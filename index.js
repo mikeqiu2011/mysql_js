@@ -6,21 +6,20 @@ const pool = mysql.createPool({
   user: "root",
   password: "password",
   database: "test",
-  // waitForConnections: true,
+  waitForConnections: true,
   connectionLimit: 10,
 });
 
-async function query(query){
+async function queryByName(name){
   try {
-    
+    const result = await pool.query("SELECT * FROM EMPLOYEES WHERE NAME = ?" , [name])
 
-    const result = await pool.query(query)
-
-    console.table(result);
+    console.table(result[0]);
 
   } catch (error) {
     console.error(error);
   }
 }
 
-query('SELECT * FROM EMPLOYEES');
+const name = process.argv[2];
+queryByName(name);
