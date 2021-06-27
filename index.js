@@ -23,7 +23,7 @@ async function insert(name, ssn){
 
     console.table(result[0]);
 
-    con.commit();
+    con.rollback();
 
     
 
