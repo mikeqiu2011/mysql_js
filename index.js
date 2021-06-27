@@ -10,11 +10,22 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-async function queryByName(name){
+async function insert(name, ssn){
   try {
-    const result = await pool.query("SELECT * FROM EMPLOYEES WHERE NAME = ?" , [name])
+    const con = await pool.getConnection();
+    con.beginTransaction()
+
+    const resultInsert = await con.query(
+      "INSERT INTO EMPLOYEES (NAME, SSN) VALUES (?,?)", 
+      [name, ssn])
+
+    const result = await con.query("SELECT * FROM EMPLOYEES")
 
     console.table(result[0]);
+
+    con.commit();
+
+    
 
   } catch (error) {
     console.error(error);
@@ -22,4 +33,5 @@ async function queryByName(name){
 }
 
 const name = process.argv[2];
-queryByName(name);
+const ssn = process.argv[3];
+insert(name, ssn);
